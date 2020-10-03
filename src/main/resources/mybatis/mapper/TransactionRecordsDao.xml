@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="jinrui.demo.dao.TransactionRecordsDao">
+  <resultMap id="BaseResultMap" type="jinrui.demo.model.entity.TransactionRecords">
+    <id column="idtransaction_records" jdbcType="INTEGER" property="idtransactionRecords" />
+    <result column="creatdate" jdbcType="TIMESTAMP" property="creatdate" />
+    <result column="updatedate" jdbcType="TIMESTAMP" property="updatedate" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="isdel" jdbcType="TINYINT" property="isdel" />
+    <result column="status" jdbcType="TINYINT" property="status" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    idtransaction_records, creatdate, updatedate, remark, `name`, isdel, `status`
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from transaction_records
+    where idtransaction_records = #{idtransactionRecords,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from transaction_records
+    where idtransaction_records = #{idtransactionRecords,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" keyColumn="idtransaction_records" keyProperty="idtransactionRecords" parameterType="jinrui.demo.model.entity.TransactionRecords" useGeneratedKeys="true">
+    insert into transaction_records (creatdate, updatedate, remark, 
+      `name`, isdel, `status`
+      )
+    values (#{creatdate,jdbcType=TIMESTAMP}, #{updatedate,jdbcType=TIMESTAMP}, #{remark,jdbcType=VARCHAR}, 
+      #{name,jdbcType=VARCHAR}, #{isdel,jdbcType=TINYINT}, #{status,jdbcType=TINYINT}
+      )
+  </insert>
+  <insert id="insertSelective" keyColumn="idtransaction_records" keyProperty="idtransactionRecords" parameterType="jinrui.demo.model.entity.TransactionRecords" useGeneratedKeys="true">
+    insert into transaction_records
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="creatdate != null">
+        creatdate,
+      </if>
+      <if test="updatedate != null">
+        updatedate,
+      </if>
+      <if test="remark != null">
+        remark,
+      </if>
+      <if test="name != null">
+        `name`,
+      </if>
+      <if test="isdel != null">
+        isdel,
+      </if>
+      <if test="status != null">
+        `status`,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="creatdate != null">
+        #{creatdate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updatedate != null">
+        #{updatedate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="remark != null">
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="isdel != null">
+        #{isdel,jdbcType=TINYINT},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=TINYINT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="jinrui.demo.model.entity.TransactionRecords">
+    update transaction_records
+    <set>
+      <if test="creatdate != null">
+        creatdate = #{creatdate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updatedate != null">
+        updatedate = #{updatedate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="remark != null">
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null">
+        `name` = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="isdel != null">
+        isdel = #{isdel,jdbcType=TINYINT},
+      </if>
+      <if test="status != null">
+        `status` = #{status,jdbcType=TINYINT},
+      </if>
+    </set>
+    where idtransaction_records = #{idtransactionRecords,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="jinrui.demo.model.entity.TransactionRecords">
+    update transaction_records
+    set creatdate = #{creatdate,jdbcType=TIMESTAMP},
+      updatedate = #{updatedate,jdbcType=TIMESTAMP},
+      remark = #{remark,jdbcType=VARCHAR},
+      `name` = #{name,jdbcType=VARCHAR},
+      isdel = #{isdel,jdbcType=TINYINT},
+      `status` = #{status,jdbcType=TINYINT}
+    where idtransaction_records = #{idtransactionRecords,jdbcType=INTEGER}
+  </update>
+</mapper>
