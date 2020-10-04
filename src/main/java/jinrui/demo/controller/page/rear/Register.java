@@ -23,12 +23,17 @@ public class Register {
     @Resource
     private UserService userService;
 
+
+    /**
+     * 注册账户
+     * @param param 解析出user
+     * @return 1成功     2账户或者手机号重复  3：error
+     */
     @RequestMapping("/register")
     @ResponseBody
     public ResultData register(@RequestBody JSONObject param){
 
-        JSONObject userJson = param.getJSONObject("user");
-        User user = JSON.toJavaObject(userJson,User.class);
+        User user = JSON.toJavaObject(param.getJSONObject("user"),User.class);
 
         ResultData resultData;
 

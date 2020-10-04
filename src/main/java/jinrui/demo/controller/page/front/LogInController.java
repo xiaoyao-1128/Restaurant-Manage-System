@@ -27,6 +27,11 @@ public class LogInController {
     @Resource
     private UserService userService;
 
+    /**
+     * 登录
+     * @param param account 账号 phoneNumber 手机号 password 密码
+     * @return 成功 /密码错误 /错误请求 /未知错误
+     */
     @RequestMapping("/login")
     @ResponseBody
     public ResultData login(@RequestBody JSONObject param){
