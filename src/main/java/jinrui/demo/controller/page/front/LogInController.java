@@ -4,9 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import jinrui.demo.model.dto.ResultData;
 import jinrui.demo.service.UserService;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.HashMap;
@@ -32,20 +30,18 @@ public class LogInController {
      * @param param account 账号 phoneNumber 手机号 password 密码
      * @return 成功 /密码错误 /错误请求 /未知错误
      */
-    @RequestMapping("/login")
+    @GetMapping("/login")
     @ResponseBody
-    public ResultData login(@RequestBody JSONObject param){
+    public ResultData login(@RequestParam String account, String phoneNumber, String password, String loginMethod){
 
         //返回结果对象
         ResultData resultData;
         //如果没有账号，直接返回错误信息
-        String account = param.getString("account");
-        Integer phoneNumber = param.getInteger("phoneNumber");
-        String password = param.getString("password");
+
         /*获取json中要用的数据
          *如果loginMethod返回1代表使用密码登录
          * 如果loginMethod返回2代表使用验证码登录*/
-        Integer loginMethod = param.getInteger("loginMethod");
+
         if(loginMethod == null){
             return new ResultData(ResultData.error());
         }

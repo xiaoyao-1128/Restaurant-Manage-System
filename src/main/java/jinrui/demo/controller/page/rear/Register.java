@@ -6,9 +6,7 @@ import jinrui.demo.model.dto.ResultData;
 import jinrui.demo.model.entity.User;
 import jinrui.demo.service.UserService;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 
@@ -29,19 +27,12 @@ public class Register {
      * @param param 解析出user
      * @return 1成功     2账户或者手机号重复  3：error
      */
-    @RequestMapping("/register")
+    @GetMapping("/register")
     @ResponseBody
-    public ResultData register(@RequestBody JSONObject param){
-
-        User user = JSON.toJavaObject(param.getJSONObject("user"),User.class);
-
+    public ResultData register(@RequestParam User user){
         ResultData resultData;
-
-        if(canNotRegister(user)){
-            return  new ResultData(ResultData.error());
-        }
+        if(canNotRegister(user)){ return  new ResultData(ResultData.error()); }
         int code = userService.register(user);
-
         switch (code){
             case 1 : resultData = new ResultData(ResultData.success()); break;
             case 2 :
@@ -49,7 +40,6 @@ public class Register {
                 resultData = new ResultData(ResultData.repeat()); break;
             default: resultData = new ResultData(ResultData.error()); break;
         }
-
         return resultData;
     }
 
