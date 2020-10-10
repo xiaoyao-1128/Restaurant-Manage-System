@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="jinrui.demo.dao.UserDao">
   <resultMap id="BaseResultMap" type="jinrui.demo.model.entity.User">
-    <id column="iduser" jdbcType="INTEGER" property="iduser" />
+    <id column="iduser" jdbcType="VARCHAR" property="iduser" />
     <result column="creatdate" jdbcType="TIMESTAMP" property="creatdate" />
     <result column="updatedate" jdbcType="TIMESTAMP" property="updatedate" />
     <result column="remark" jdbcType="VARCHAR" property="remark" />

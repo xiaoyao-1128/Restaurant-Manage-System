@@ -18,6 +18,18 @@ public class UserServiceImpl implements UserService {
     @Resource
     private UserDao userDao;
 
+    @Override
+    public User findUserByPhoneNumber(String phoneNumber){
+        return userDao.selectByPhoneNumber(phoneNumber);
+    }
+
+
+    @Override
+    public User findUserById(Integer iduser) {
+        return userDao.selectByPrimaryKey(iduser);
+    }
+
+
     /**
      *
      * @param account 账号
@@ -25,14 +37,14 @@ public class UserServiceImpl implements UserService {
      * @return 返回是否成功
      */
     @Override
-    public boolean loginMethod(String account, String password){
-        return (userDao.loginMethodByAccount(account, password) != null);
+    public User loginMethod(String account, String password){
+        return (userDao.loginMethodByAccount(account, password));
     }
 
     /**
      *
      * @param user 传入user对象
-     * @return 1：成功插入 2：账号已存在 3：手机号已存在
+     * @return 1：成功插入 2：账号已存在 3：手机号已存在 4:沒有密碼
      *          0:数据库操作失败
      */
     @Override

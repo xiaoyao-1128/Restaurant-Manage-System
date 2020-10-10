@@ -5,6 +5,7 @@ package jinrui.demo.model.dto;
  * @Date: 2020/10/2 11:09
  */
 
+
 public enum  BaseResultStatus {
     /**
      * ssss

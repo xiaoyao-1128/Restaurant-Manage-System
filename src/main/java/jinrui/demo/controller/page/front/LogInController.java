@@ -1,79 +1,83 @@
 package jinrui.demo.controller.page.front;
 
 import com.alibaba.fastjson.JSONObject;
-import jinrui.demo.model.dto.ResultData;
+import com.auth0.jwt.JWT;
+import io.swagger.annotations.ApiOperation;
+import jinrui.demo.annotation.UserLoginToken;
+import jinrui.demo.model.dto.BaseResultStatus;
+import jinrui.demo.model.entity.User;
+import jinrui.demo.service.TokenService;
 import jinrui.demo.service.UserService;
+import jinrui.demo.util.TokenUtil;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
-import java.util.HashMap;
-import java.util.Map;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * @Author: jiaRu
  * @Date: 2020/10/2 10:37
 */
 
-@Controller
+@RestController
 @RequestMapping("/page/front")
 public class LogInController {
-    /**USE_P 表示使用密码登录*/
-    private static final Integer USE_PASSWORD = 1;
-    /**USE_V 表示使用验证码登录*/
-    private static final Integer USE_V = 2;
     @Resource
     private UserService userService;
+    @Autowired
+    TokenService tokenService;
 
     /**
-     * 登录
-     * @param param account 账号 phoneNumber 手机号 password 密码
+     *          登录
+     *         返回使用jsonObject
+     * @param  account 账号 phoneNumber 手机号 password 密码
      * @return 成功 /密码错误 /错误请求 /未知错误
      */
+    @ApiOperation(value = "登陆", notes = "登陆")
     @GetMapping("/login")
     @ResponseBody
-    public ResultData login(@RequestParam String account, String phoneNumber, String password, String loginMethod){
+    public JSONObject loginByPassword(@RequestParam String account, String password, HttpServletResponse response){
 
-        //返回结果对象
-        ResultData resultData;
-        //如果没有账号，直接返回错误信息
+        JSONObject jsonObject = new JSONObject();
+        User userForBase = null;
 
-        /*获取json中要用的数据
-         *如果loginMethod返回1代表使用密码登录
-         * 如果loginMethod返回2代表使用验证码登录*/
-
-        if(loginMethod == null){
-            return new ResultData(ResultData.error());
+        if(account != null){
+            userForBase = userService.loginMethod(account, password);
         }
-        else if(loginMethod.equals(USE_V)){
-            //用户选择使用验证码登录,发送验证码到所填手机号上
-            String verificationCode = String.valueOf((int)((Math.random()*9+1)*1000));
-            Map<String, Object> data = new HashMap<>(1);
-            data.put("验证码",verificationCode);
-            resultData = new ResultData(ResultData.success());
-            resultData.setData(data);
-            return resultData;
-        } else if(loginMethod.equals(USE_PASSWORD)){
-            /*
-             * 用户选择使用密码登录
-             * 使用密码登录，只能用账号来操作
-             */
-            boolean loginSuccess;
-            if(account != null){
-                loginSuccess = userService.loginMethod(account, password);
-            }else {
-                return new ResultData(ResultData.errorRequest());
-            }
-            if(loginSuccess){
-                resultData = new ResultData(ResultData.success());
-            }else{
-                resultData = new ResultData(ResultData.errorPassword());
-            }
+        if(userForBase != null){
+            jsonObject.put("message",BaseResultStatus.SUCCESS.getMessage());
         }else{
-            //未知参数
-            resultData = new ResultData(ResultData.errorRequest());
+            jsonObject.put("message",BaseResultStatus.ERROR_PASSWORD.getMessage());
+            return jsonObject;
         }
 
-        return resultData;
+        String token = tokenService.getToken(userForBase);
+        System.out.println(token);
+        jsonObject.put("token", token);
+        Cookie cookie = new Cookie("token", token);
+        cookie.setPath("/");
+        response.addCookie(cookie);
+
+        return jsonObject;
     }
+
+    @ApiOperation(value = "登陆", notes = "登陆")
+    @GetMapping("/loginByVerificationCode")
+    @ResponseBody
+    public JSONObject loginByVerificationCode(@RequestParam String verificationCode, @RequestHeader("X-Access-Token") String token){
+        JSONObject jsonObject = new JSONObject();
+        String codeInToken = JWT.decode(token).getAudience().get(0);
+        if(verificationCode.equals(codeInToken)){
+            jsonObject.put("message", BaseResultStatus.SUCCESS.getMessage());
+            jsonObject.put("code", BaseResultStatus.SUCCESS.getCode());
+        }else{
+            jsonObject.put("message", "验证码错误");
+        }
+        return jsonObject;
+    }
+
 }

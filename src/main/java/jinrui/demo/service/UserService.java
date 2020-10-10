@@ -1,5 +1,6 @@
 package jinrui.demo.service;
 
+import jinrui.demo.dao.UserDao;
 import jinrui.demo.model.entity.User;
 
 /**
@@ -8,13 +9,22 @@ import jinrui.demo.model.entity.User;
  */
 public interface UserService {
 
+
+    /**
+     * 根据手机号查询用户
+     * @param phoneNumber
+     * @return userId
+     */
+    User findUserByPhoneNumber(String phoneNumber);
+
+
     /**
      * 登录检验
      * @param account :账号
      * @param password ：密码
      * @return 返回true表示密码正确，返回false表示错误
      */
-    boolean loginMethod(String account, String password);
+    User loginMethod(String account, String password);
 //    boolean loginMethod(Integer phoneNumber, String password);
 
     /**
@@ -24,5 +34,12 @@ public interface UserService {
      *             0:数据库操作失败
      */
     Integer register(User user);
+
+    /**
+     * 根据id查询
+     * @param iduser id
+     * @return 对象
+     */
+    public User findUserById(Integer iduser);
 
 }

@@ -11,7 +11,7 @@ import java.util.Date;
  */
 @Data
 public class User implements Serializable {
-    private Integer iduser;
+    private String iduser;
 
     private Date creatdate;
 
@@ -42,9 +42,9 @@ public class User implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    User(){ }
+    public User(){ }
 
-    public User(Integer iduser, Date creatdate, Date updatedate, String remark, String name, Byte isdel, Byte status, String phoneNumber, String password, String account) {
+    public User(String iduser, Date creatdate, Date updatedate, String remark, String name, Byte isdel, Byte status, String phoneNumber, String password, String account) {
         this.iduser = iduser;
         this.creatdate = creatdate;
         this.updatedate = updatedate;

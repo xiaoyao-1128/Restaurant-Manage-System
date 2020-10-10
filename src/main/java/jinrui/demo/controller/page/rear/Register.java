@@ -1,7 +1,7 @@
 package jinrui.demo.controller.page.rear;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import jinrui.demo.model.dto.BaseResultStatus;
 import jinrui.demo.model.dto.ResultData;
 import jinrui.demo.model.entity.User;
 import jinrui.demo.service.UserService;
@@ -21,26 +21,30 @@ public class Register {
     @Resource
     private UserService userService;
 
-
     /**
      * 注册账户
-     * @param param 解析出user
+     * @param  user
      * @return 1成功     2账户或者手机号重复  3：error
      */
     @GetMapping("/register")
     @ResponseBody
-    public ResultData register(@RequestParam User user){
-        ResultData resultData;
-        if(canNotRegister(user)){ return  new ResultData(ResultData.error()); }
+    public JSONObject register(User user){
+        JSONObject jsonObject = new JSONObject();
+        if(canNotRegister(user)){
+            jsonObject.put("message", "注册信息不完善，清重新填写！");
+            return jsonObject;
+        }
+        /*            插入操作。。。。。。。。。                  */
         int code = userService.register(user);
+        System.out.println("=========="+code);
         switch (code){
-            case 1 : resultData = new ResultData(ResultData.success()); break;
+            case 1 : jsonObject.put("message", BaseResultStatus.SUCCESS.getMessage()); break;
             case 2 :
             case 3 :
-                resultData = new ResultData(ResultData.repeat()); break;
-            default: resultData = new ResultData(ResultData.error()); break;
+                jsonObject.put("message", BaseResultStatus.REPEAT.getMessage()); break;
+            default: jsonObject.put("message", BaseResultStatus.ERROR.getMessage()); break;
         }
-        return resultData;
+        return jsonObject;
     }
 
     /**
